@@ -46,7 +46,7 @@ class WebCapture
                 $data['request_url'] = $url;
                 $data['response_data'] = $this->jsonGet($url);
                 $data['create_time'] = time();
-                $data['version'] = $task->name.$data['create_time'];
+                $data['version'] = strtoupper($url).$data['create_time'];
                 $data_lists[] = $data;
                 $terminal->info("capturing URL_PATH=>".$url);
             }
