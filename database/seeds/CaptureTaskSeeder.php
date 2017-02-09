@@ -20,6 +20,8 @@ class CaptureTaskSeeder extends Seeder
             'request_info' => "",
             'ping_status' => 0,
             'status' => 1,
+            'type'=>'article',
+            'extra'=>json_encode(['title'=>'','datetime'=>'','content_html'=>'']),
             'modify_time' => time(),
             'create_time' => time(),
         ]);
