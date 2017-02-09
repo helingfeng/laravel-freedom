@@ -39,18 +39,17 @@ class WebCapture
         $network_status = $this->checkNetwork($task->remote_host);
         if ($network_status) {
             DB::table('ms_crawler_task_sheet')->where('name', $task->name)->update(['ping_status' => 1]);
-            $data_lists = [];
             $request_urls = $this->combinePath($task->remote_host, $task->request_path, $task->request_info);
             foreach ($request_urls as $url) {
                 $data['name'] = $task->name;
                 $data['request_url'] = $url;
-                $data['response_data'] = $this->jsonGet($url);
+                $data['response_data'] = self::jsonGet($url);
                 $data['create_time'] = time();
                 $data['version'] = strtoupper($url).$data['create_time'];
-                $data_lists[] = $data;
                 $terminal->info("capturing URL_PATH=>".$url);
+                DB::table('ms_crawler_raw_data')->insert($data);
             }
-            DB::table('ms_crawler_raw_data')->insert($data_lists);
+
         }else{
             $task->ping_status = 0;
             DB::table('ms_crawler_task_sheet')->where('name', $task->name)->update(['ping_status' => 0]);
@@ -91,7 +90,7 @@ class WebCapture
         return $urls;
     }
 
-    public function jsonGet($url)
+    public static function jsonGet($url)
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_POST, 0);
